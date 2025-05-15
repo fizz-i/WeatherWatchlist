@@ -3,6 +3,7 @@ import sys
 import os
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QStackedWidget)
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
 from dotenv import load_dotenv
 
 
@@ -15,7 +16,7 @@ class Page1(QWidget):
         self.weather_label = QLabel(self)
         self.weatherdesc = QLabel("HOT",self)
         self.weather_emooji = QLabel("HOTEMOJI",self)
-        self.get_movie_button = QPushButton("Get Movie",self)
+        self.get_movie_button = QPushButton("Get a Movie For this Weather",self)
         
         self.UI1()
 
@@ -39,7 +40,7 @@ class Page1(QWidget):
         self.weather_emooji.setObjectName("emoji")
         self.get_movie_button.setObjectName("GetButton")
         
-        self.setStyleSheet("""
+        self.setStyleSheet("""  
             QLabel, QPushButton {
                 font-family: Helvetica Neue;
                            }
@@ -79,19 +80,20 @@ class Page1(QWidget):
             }
 
 
-""")
+""") #ADD DROP SHADOW, Better Front, Better Background 
+        
         self.get_movie_button.clicked.connect(self.go_to_page2)
         self.get_weather()
         self.setMinimumSize(400,300)
         self.resize(500,400)
 
-    def Location(self):
+    def Location(self):                                   #ERROR Handling is pending
         res = requests.get("https://ipinfo.io/json")
         data = res.json()
         city = data.get("city")
         return city
 
-    def get_weather(self):
+    def get_weather(self):                         #Error handling is pending
         load_dotenv()
         api_key = os.getenv("api_key")
         city = self.Location()
@@ -114,10 +116,11 @@ class Page1(QWidget):
         weather_id  = data["weather"][0]["id"]
 
 
-
         self.weather_label.setText(f"{round(real_temp)}°C {self.Location()}")
         self.weatherdesc.setText(f"{desc}")
         self.weather_emooji.setText(f"{self.get_emoji(weather_id)}")
+
+    #Another function to display errors
 
     @staticmethod
     def get_emoji(weather_id):
@@ -142,14 +145,20 @@ class Page2(QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.stacked_widget = stacked_widget
-        layout = QVBoxLayout()
-        label = QLabel("This is Page 2")
-        button = QPushButton("Back")
-        button.clicked.connect(self.go_to_page1)
 
-        layout.addWidget(label)
-        layout.addWidget(button)
-        self.setLayout(layout)
+        back_button = QPushButton("Back")
+        back_button.clicked.connect(self.go_to_page1)
+
+    def initUI(self):   #Initial UI to be set, CSS, Get Pictures somehow
+        pass
+    
+    def to_getMovie(self): ##TMDB API to be connected
+        pass
+
+    def to_displayError(self): #error handling
+        pass
+
+    #funtion to display error
 
     def go_to_page1(self):
         self.stacked_widget.setCurrentIndex(0)
