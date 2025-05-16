@@ -127,7 +127,7 @@ QPushButton#GetButton:pressed {
         data = response.json()
         if data["cod"]==200:
             self.display_weather(data)
-    
+
     def go_to_page2(self):
         self.stacked_widget.setCurrentIndex(1)
 
@@ -142,6 +142,7 @@ QPushButton#GetButton:pressed {
         self.weatherdesc.setText(f"{desc}")
         self.weather_emooji.setText(f"{self.get_emoji(weather_id)}")
 
+    
     #Another function to display errors
 
     @staticmethod
@@ -267,9 +268,45 @@ QPushButton#BackButton:pressed {
                             """)
                 
         self.back_button.clicked.connect(self.go_to_page1)
+        self.to_getMovie()
+
         
+    def get_genre(self):
+        load_dotenv()
+        api_key = os.getenv("api_key")
+        city = Page1.Location(self)
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+
+
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        weather_id = data["weather"][0]["id"]
+        
+        if weather_id >= 200:
+            return "53,27"
+        elif weather_id >= 300:
+            return "18,10749"
+        elif weather_id >= 500:
+            return "9648,80,18"
+        elif weather_id >= 600:
+            return "14,10751"
+        elif weather_id >= 700:
+            return "878,9648,36"
+        elif weather_id == 800:
+            return "12,35,28"
+        elif weather_id > 800:
+            return "99,10752,37"
+        
+
     def to_getMovie(self): ##TMDB API to be connected
-        pass
+        load_dotenv()
+        api_key=os.getenv("api_key2")
+        url = f'https://api.themoviedb.org/3/discover/movie?api_key={api_key}&vote_average.gte=6.0&with_genres={self.get_genre()}'
+
+        response = requests.get(url)
+        data = response.json()
+        print(data)
 
     def to_displayError(self): #error handling
         pass
