@@ -1,11 +1,11 @@
 import requests
 import sys
 import os
-from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QStackedWidget)
+from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QStackedWidget, QGraphicsDropShadowEffect)
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import (QPixmap,QPalette, QBrush, QLinearGradient, QColor)
 from dotenv import load_dotenv
-
+import random
 
 
 class Page1(QWidget):
@@ -40,6 +40,18 @@ class Page1(QWidget):
         self.weather_emooji.setObjectName("emoji")
         self.get_movie_button.setObjectName("GetButton")
         
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(25)
+        shadow.setXOffset(0)
+        shadow.setYOffset(4)
+        shadow.setColor(QColor(0,0,0,150))
+        
+        self.weather_label.setGraphicsEffect(shadow)
+        self.weatherdesc.setGraphicsEffect(shadow)
+        self.weather_emooji.setGraphicsEffect(shadow)
+        self.get_movie_button.setGraphicsEffect(shadow)
+        
+
         self.setStyleSheet("""  
             QLabel, QPushButton {
                 font-family: Helvetica Neue;
@@ -63,21 +75,31 @@ class Page1(QWidget):
                            }
 
             QPushButton#GetButton {
-                background-color: #2c3e50;
-                color: white;
-                border-radius: 12px;
-                padding: 10px 20px;
-                font-size: 14px;
-                
-                }
-            
-            QPushButton#GetButton:hover {
-                background-color: #34495e;
-            }
-            
-            QPushButton#GetButton:pressed {
-                background-color: #1abc9c;
-            }
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #00b894,
+        stop:1 #019875);
+    color: white;
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+
+}
+
+QPushButton#GetButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #019875,
+        stop:1 #00b894);
+
+}
+
+QPushButton#GetButton:pressed {
+    background: #01775c;
+
+}
 
 
 """) #ADD DROP SHADOW, Better Front, Better Background 
@@ -185,44 +207,62 @@ class Page2(QWidget):
             
             QLabel#Rating {
                 font-size: 58px;
-                font-weight: Demi bold;
+                font-weight: 600;
                 color: #2c3e50;
                            }
 
 
             QPushButton#RefreshButton {
-                background-color: #2c3e50;
+                background: qlineargradient(
+                    x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #00b894,
+                    stop:1 #019875);
                 color: white;
-                border-radius: 12px;
-                padding: 10px 20px;
-                font-size: 14px;
-                
-                }
-            
-            QPushButton#RefreshButton:hover {
-                background-color: #34495e;
-            }
-            
-            QPushButton#RefreshButton:pressed {
-                background-color: #1abc9c;
-            }
+                border-radius: 10px;
+                padding: 12px 25px;
+                font-size: 16px;
+                font-weight: 600;
+                border: none;
 
-            QPushButton#BackButton {
-                background-color: #2c3e50;
-                color: white;
-                border-radius: 12px;
-                padding: 10px 20px;
-                font-size: 14px;
-                
-                }
-            
-            QPushButton#BackButton:hover {
-                background-color: #34495e;
-            }
-            
-            QPushButton#BackButton:pressed {
-                background-color: #1abc9c;
-            }
+}
+
+QPushButton#RefreshButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #019875,
+        stop:1 #00b894);
+
+}
+
+QPushButton#RefreshButton:pressed {
+    background: #01775c;
+}
+
+QPushButton#BackButton {
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #00b894,
+        stop:1 #019875);
+    color: white;
+    border-radius: 10px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+
+}
+
+QPushButton#BackButton:hover {
+    background: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #019875,
+        stop:1 #00b894);
+
+}
+
+QPushButton#BackButton:pressed {
+    background: #01775c;
+}
 
                             """)
                 
@@ -248,11 +288,28 @@ class WeatherWatchlist(QWidget):
 
         self.stack.addWidget(self.page1)
         self.stack.addWidget(self.page2)
+        
         self.setStyleSheet("background: linear-gradient(to right, #11998e, #38ef7d);")
+        
+        #gradient
+        
+        gradient = QLinearGradient(0, 0, self.width(), 0)  # Horizontal
+        gradient.setColorAt(0.0, QColor("#d3d3d3"))  # Start
+        gradient.setColorAt(1.0, QColor("#808080"))  # End
+
+        palette = QPalette()
+        palette.setBrush(QPalette.Window, QBrush(gradient))
+        self.setAutoFillBackground(False)
+        self.setPalette(palette)
+
+
         layout  = QVBoxLayout()
         layout.addWidget(self.stack)
         self.setLayout(layout)
         self.setWindowTitle("WeatherWatchlist")
+
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app_ = WeatherWatchlist()
