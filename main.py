@@ -22,7 +22,7 @@ class Page1(QWidget):
 
 
     def UI1(self):
-        self.setWindowTitle("WeatherWatchlist")
+        
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.weather_label)
@@ -114,7 +114,7 @@ class Page1(QWidget):
         real_temp = temp - 273
         desc = data["weather"][0]["description"]
         weather_id  = data["weather"][0]["id"]
-
+        print(data)
 
         self.weather_label.setText(f"{round(real_temp)}°C {self.Location()}")
         self.weatherdesc.setText(f"{desc}")
@@ -145,13 +145,89 @@ class Page2(QWidget):
     def __init__(self, stacked_widget):
         super().__init__()
         self.stacked_widget = stacked_widget
-
-        back_button = QPushButton("Back")
-        back_button.clicked.connect(self.go_to_page1)
-
-    def initUI(self):   #Initial UI to be set, CSS, Get Pictures somehow
-        pass
+        self.movie_label = QLabel("Movie",self)
+        self.movies_rating = QLabel("9.0", self)
+        self.refresh_button = QPushButton("Reload", self)
+        self.back_button = QPushButton("Back", self)    
     
+        self.initUI()
+    
+    def initUI(self):   #Initial UI to be set, CSS, Get Pictures somehow
+        
+        vbox = QVBoxLayout()
+
+        vbox.addWidget(self.movie_label)
+        vbox.addWidget(self.movies_rating)
+        vbox.addWidget(self.refresh_button)
+        vbox.addWidget(self.back_button)
+
+        self.setLayout(vbox)
+
+        self.movie_label.setAlignment(Qt.AlignCenter)
+        self.movies_rating.setAlignment(Qt.AlignCenter)
+
+        self.movie_label.setObjectName("movieLabel")
+        self.movies_rating.setObjectName("Rating")
+        self.refresh_button.setObjectName("RefreshButton")
+        self.back_button.setObjectName("BackButton")
+
+        self.setStyleSheet("""
+
+            QLabel, QPushButton {
+                font-family: Helvetica Neue;
+                           }
+
+            QLabel#movieLabel {
+                font-size: 62px;
+                font-style: bold;
+                color: #2c3e50;
+                           }
+            
+            QLabel#Rating {
+                font-size: 58px;
+                font-weight: Demi bold;
+                color: #2c3e50;
+                           }
+
+
+            QPushButton#RefreshButton {
+                background-color: #2c3e50;
+                color: white;
+                border-radius: 12px;
+                padding: 10px 20px;
+                font-size: 14px;
+                
+                }
+            
+            QPushButton#RefreshButton:hover {
+                background-color: #34495e;
+            }
+            
+            QPushButton#RefreshButton:pressed {
+                background-color: #1abc9c;
+            }
+
+            QPushButton#BackButton {
+                background-color: #2c3e50;
+                color: white;
+                border-radius: 12px;
+                padding: 10px 20px;
+                font-size: 14px;
+                
+                }
+            
+            QPushButton#BackButton:hover {
+                background-color: #34495e;
+            }
+            
+            QPushButton#BackButton:pressed {
+                background-color: #1abc9c;
+            }
+
+                            """)
+                
+        self.back_button.clicked.connect(self.go_to_page1)
+        
     def to_getMovie(self): ##TMDB API to be connected
         pass
 
@@ -172,11 +248,11 @@ class WeatherWatchlist(QWidget):
 
         self.stack.addWidget(self.page1)
         self.stack.addWidget(self.page2)
-        self.setStyleSheet("background-color: #b2f7ef;")
+        self.setStyleSheet("background: linear-gradient(to right, #11998e, #38ef7d);")
         layout  = QVBoxLayout()
         layout.addWidget(self.stack)
         self.setLayout(layout)
-
+        self.setWindowTitle("WeatherWatchlist")
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app_ = WeatherWatchlist()
