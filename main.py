@@ -202,13 +202,13 @@ class Page2(QWidget):
 
             QLabel#movieLabel {
                 font-size: 62px;
-                font-style: bold;
+                font-weight: 600;
                 color: #2c3e50;
                            }
             
             QLabel#Rating {
-                font-size: 58px;
-                font-weight: 600;
+                font-size: 45x;
+                font-weight: 200;
                 color: #2c3e50;
                            }
 
@@ -268,6 +268,7 @@ QPushButton#BackButton:pressed {
                             """)
                 
         self.back_button.clicked.connect(self.go_to_page1)
+        self.refresh_button.clicked.connect(self.refresh)
         self.to_getMovie()
 
         
@@ -299,7 +300,7 @@ QPushButton#BackButton:pressed {
             return "99,10752,37"
         
 
-    def to_getMovie(self): ##TMDB API to be connected
+    def to_getMovie(self):
         load_dotenv()
         api_key=os.getenv("api_key2")
         url = f'https://api.themoviedb.org/3/discover/movie?api_key={api_key}&vote_average.gte=6.0&with_genres={self.get_genre()}'
@@ -307,7 +308,30 @@ QPushButton#BackButton:pressed {
         response = requests.get(url)
         data = response.json()
         print(data)
+        self.to_display_movie(data)
+        
+    def to_display_movie(self, data):
+        self.data = data
+        rand_movie = random.choice(data["results"])
+        movie_name = rand_movie["title"]
+        movie_rating = str(rand_movie["vote_average"])
+        movie_rating_total = rand_movie["vote_count"]
+        movie_desc = rand_movie["overview"]
 
+        self.movie_label.setText(movie_name)
+        self.movies_rating.setText(f"Rating: {movie_rating}")
+        
+    def refresh(self):
+        
+        data = self.data
+        rand_movie = random.choice(data["results"])
+        movie_name = rand_movie["title"]
+        movie_rating = str(rand_movie["vote_average"])
+        movie_rating_total = rand_movie["vote_count"]
+        movie_desc = rand_movie["overview"]
+        self.movie_label.setText(movie_name)
+        self.movies_rating.setText(f"Rating: {movie_rating}")
+    
     def to_displayError(self): #error handling
         pass
 
